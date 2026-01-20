@@ -1,26 +1,1020 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+  font-family: "Dosis Regular";
+  src: url("/fonts/DosisRegular.ttf");
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@font-face {
+  font-family: "Digi Reg";
+  src: url("/fonts/DS-DIGI.ttf");
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@font-face {
+  font-family: "Digi Bold";
+  src: url("/fonts/DS-DIGIB.ttf");
+}
+
+@font-face {
+  font-family: "Digi Italic";
+  src: url("/fonts/DS-DIGII.ttf");
+}
+
+@font-face {
+  font-family: "Digi T";
+  src: url("/fonts/DS-DIGIT.ttf");
+}
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay.ttf");
+}
+
+@font-face {
+  font-family: "Don Jose";
+  src: url("/fonts/DonJoseBigote.ttf");
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Medium.otf");
+}
+
+@font-face {
+  font-family: "Multiple";
+  src: url("/fonts/multiple.otf");
+}
+
+@font-face {
+  font-family: "Earls Revenge";
+  src: url("/fonts/EarlsRevenge.ttf");
+}
+
+@font-face {
+  font-family: "Hermano";
+  src: url("/fonts/HermanoAltoStamp.ttf");
+}
+
+@font-face {
+  font-family: "Digi";
+  src: url("/fonts/digi.ttf");
+}
+
+@theme {
+  --font-dosis: "Dosis Regular";
+  --font-digiR: "Digi Reg";
+  --font-digiB: "Digi Bold";
+  --font-digiI: "Digi Italic";
+  --font-digiT: "Digi T";
+  --font-clash: "Clash Display";
+  --font-jose: "Don Jose";
+  --font-mult: "Multiple";
+  --font-sats: "Satoshi";
+  --font-earl: "Earls Revenge";
+  --font-herm: "Hermano";
+  --font-digi: "Digi";
+
+  --color-offBlack: #111313;
+  --color-offBlue: #81a8f8;
+  --color-black: #000000;
+  --color-white: #fbfbfb;
+  --color-offWhite: #f2f2f2;
+  --color-lensLight: #abfe2c;
+  --color-lensLightBlue: #00a3ff;
+  --color-lensDark: #070707;
+  --color-mazul: #2a36f6;
+  --color-lBlue: #81a8f8;
+  --color-pastel: #f3f7c8;
+  --color-aBlue: #b7c5da;
+  --color-verde: #91ff85;
+  --color-verdea: #85ff9a;
+  --color-sol: #fcdc42;
+  --color-rosa: #fb5cfd;
+  --color-cost: #ffac29;
+  --color-ballena: #fbfbf9;
+  --color-lemon: #fef499;
+  --color-ama: #f6ea55;
+  --color-midGreen: #09c261;
+  --color-rojo: #f62a2a;
+  --color-gran: #fe4747;
+  --color-morado: #8c3cff;
+  --color-azul: #85aeff;
+  --color-violeta: #8b5cf6;
+  --color-gris: #868686;
+  --color-grisI: #c4c4c4;
+  --color-grisC: #c8c8c8;
+  --color-grisO: #767676;
+  --color-spots: #daf0ff;
+  --color-dBrown: #452800;
+  --color-ligera: #cefc04;
+  --color-mist: #b8c5d6;
+  --color-nave: #111f38;
+  --color-smoke: #f4f4f4;
+  --color-suave: #acacac;
+  --color-naranja: #f77737;
+  --color-mar: #4968ea;
+  --color-bright: #fa4040;
+  --color-viol: #9da1f4;
+  --color-bluet: #2a2dff;
+  --color-amarillo: #f7f7f3;
+  --color-agua: #00d9e8;
+  --color-grayBlue: #c9d8e4;
+  --color-oscuro: #3b3b3b;
+  --color-midWhite: #faf4e8;
+  --color-mustard: #fbeed1;
+  --color-midMus: #fdf3d8;
+  --color-heat: #fbdb86;
+  --color-deep: #0091ff;
+  --color-libGray: #dedce1;
+  --color-flight: #f0e7e2;
+  --color-liBl: #a3e3f4;
+  --color-liOr: #f9c571;
+  --color-liVi: #c1a8e8;
+  --color-offY: #feea66;
+  --color-liDa: #f27a24;
+  --color-lime: #77ffb8;
+  --color-baby: #53b4ff;
+  --color-lily: #f6ddc3;
+  --color-lili: #b4fab5;
+  --color-bluey: #32c5ff;
+  --color-offYellow: #f7f7f3;
+  --color-comp: #b9b9b9;
+  --color-yell: #fcdb8f;
+  --color-dcomp: #606362;
+  --color-dullY: #f9ebcc;
+  --color-dialY: #fbdb84;
+  --color-dialG: #a6da70;
+  --color-lB: #06a9cf;
+  --color-ocean: #078fd6;
+  --color-shame: #f6f5f0;
+  --color-disk: #44afd3;
+  --color-coast: #b9d9ff;
+  --color-post: #712af6;
+  --color-moss: #212929;
+  --color-weed: #1c2222;
+  --color-litnus: #06cf0b;
+  --color-posh: #0a15c7;
+  --color-cap: #919191;
+  --color-dG: #001517;
+  --color-naran: #f87326;
+  --color-playa: #2a58f6;
+}
+
+@layer utilities {
+  .font-dosis {
+    font-family: var(--font-dosis);
+  }
+  .font-digiR {
+    font-family: var(--font-digiR);
+  }
+  .font-digiB {
+    font-family: var(--font-digiB);
+  }
+  .font-digiI {
+    font-family: var(--font-digiI);
+  }
+  .font-digiT {
+    font-family: var(--font-digiT);
+  }
+  .font-clash {
+    font-family: var(--font-clash);
+  }
+  .font-jose {
+    font-family: var(--font-jose);
+  }
+  .font-mult {
+    font-family: var(--font-mult);
+  }
+  .font-sats {
+    font-family: var(--font-sats);
+  }
+  .font-earl {
+    font-family: var(--font-earl);
+  }
+  .font-herm {
+    font-family: var(--font-herm);
+  }
+  .font-digi {
+    font-family: var(--font-digi);
   }
 }
 
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+  min-width: 100vw;
+  background-image:
+    linear-gradient(#81a8f8 0.1em, transparent 0.1em),
+    linear-gradient(90deg, #81a8f8 0.1em, transparent 0.1em);
+  background-size: 5em 5em;
+  background-color: #131313;
+  overflow-x: hidden;
+}
+
+html::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+div::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+#noScroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+#noScroll::-webkit-scrollbar-track:active {
+  background-color: transparent !important;
+}
+
+#noScroll::-webkit-scrollbar-thumb:active {
+  background-color: transparent !important;
+}
+
+body::-webkit-scrollbar-track:active {
+  background-color: transparent !important;
+}
+
+body::-webkit-scrollbar-thumb:active {
+  background-color: transparent !important;
+}
+
+html::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+html::-webkit-scrollbar-track:active {
+  background-color: transparent !important;
+}
+
+html::-webkit-scrollbar-thumb:active {
+  background-color: transparent !important;
+}
+
+#record1 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmWXbHhAV2zP7znFCAk7mk9m8CJwWEvg3Y2uXkF9FriB8R");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#2a36f6, #0714d6, #0710a2, #0a15c7, #2a36f6);
+  opacity: 0.9;
+}
+
+#record1:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record2 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmcmgirQuQrY6WAdAZSVZtDZSLMVwXZ7qUZJ1YpytP6ciz");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#f8f5e6, #e7b97b, #ffdb96, #ffde90, #fff4bc);
+  opacity: 0.9;
+}
+
+#record2:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record3 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmepsJm12yZfqGKHgGeXmYs5gDFMfoAzfszbdNX3gNMWZR");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#fc9cf3, #b9d9ff, #0091ff, #fd99dc);
+  opacity: 0.9;
+}
+
+#record3:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record4 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmfPRMQV9T1QT4VukWxMnG3UXU9PBYAfBbZumggsLbkaku");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#6486f3, #b620e0, #d66a71, #f7b500, #32c5ff);
+  opacity: 0.9;
+}
+
+#record4:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record5 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmbBay2PjNcKoUa25ZWYVDGAeZZ3n8aG6bRugpw3dZLJDT");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#2af651, #07d61d, #06cf0b, #2af640);
+  opacity: 0.9;
+}
+
+#record5:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record6 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmbyjAvcCjhxGDsn8h97dxn8j5KAU9WbHasxwvtbWFHnCq");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#000000, #131313);
+  opacity: 0.9;
+}
+
+#record6:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record7 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmPeRQbckKH2RSbSrWaXRTkcXYKBJJVQpkc3mZwNsE5rHX");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#712af6, #7e07d6, #9806cf, #5a0ac7, #682af6);
+  opacity: 0.9;
+}
+
+#record7:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record8 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmZHrEM2XK3QCQmuVZsb96L553N7Mxqa1d53QmA33bm3NM");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#6dd400, #96d026, #96cb00, #cabf00, #f7b500);
+  opacity: 0.9;
+}
+
+#record8:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record9 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmVm9VbBtBjWh8sDcVm9Teaoo6XQYg2y7EwTamtq8rEyvf");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#f62ada, #d607cf, #cf06ad, #c70aa1, #f62ad3);
+  opacity: 0.9;
+}
+
+#record9:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record10 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmW2V1PyNz3DYwjfPsQQcCJnkTPtjQF5axJhjGHbEpVKbk");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(
+    #f7f7f3,
+    #dbdfb2,
+    #aeeccf,
+    #cedfde,
+    #f1d2ef,
+    #f6ebf7,
+    #f0ecf6,
+    #ffffff,
+    #f6f7e6
+  );
+  opacity: 0.9;
+}
+
+#record10:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record11 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmRnEBe8sugCxF5aCNXEUtVrQmh3fPEva6fBCVfFm2FXn8");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#f62a2a, #d60707, #cf0606);
+  opacity: 0.9;
+}
+
+#record11:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record12 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmQKyDvWHqurBiACGx1nUDy9he8w2dGsZjbrw1xSyGjLkn");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#2abdf6, #078fd6, #06a9cf, #0ac7ab, #2abcf6);
+  opacity: 0.9;
+}
+
+#record12:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record13 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmWXbHhAV2zP7znFCAk7mk9m8CJwWEvg3Y2uXkF9FriB8R");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(
+    #f6f7f3,
+    #f6ddc3,
+    #fefffe,
+    #f1d2ef,
+    #ffc4a1,
+    #f1cfbd,
+    #ffecfe
+  );
+  opacity: 0.9;
+}
+
+#record13:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record14 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmcmgirQuQrY6WAdAZSVZtDZSLMVwXZ7qUZJ1YpytP6ciz");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#f6f42a, #d6b407, #cfaa06, #c7c20a, #f5f62a);
+  opacity: 0.9;
+}
+
+#record14:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record15 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmepsJm12yZfqGKHgGeXmYs5gDFMfoAzfszbdNX3gNMWZR");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#fc9cf3, #b9d9ff, #0091ff, #99fdc1);
+  opacity: 0.9;
+}
+
+#record15:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record16 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmbA48L728fSqPDnC48GG4UYHdVGzsLriowFsRoSLHV54p");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#ff6b35, #ff8c42, #ffa600, #ff6b35);
+  opacity: 0.9;
+}
+
+#record16:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record17 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/Qmc1pxgedArguNpjKAXmWhJHDpnwELBC7SRPbi1fn831Ev");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#4ecdc4, #44a08d, #6dd5ed, #2193b0);
+  opacity: 0.9;
+}
+
+#record17:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record18 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmTvEJGC92Ec2uzNBoJcQqN5DmJ8ppfMTcQqV3D1y4CXh5");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#f093fb, #f5576c, #fa709a, #fee140);
+  opacity: 0.9;
+}
+
+#record18:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record19 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmeLCCxARTVfpSB1PX1kQCvHg3egD649L39j1SeYCDu7MU");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#667eea, #764ba2, #f093fb, #4facfe);
+  opacity: 0.9;
+}
+
+#record19:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record20 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmdjquvPR3j8xnfhT7Gt2QjspKgWVyG9hxodvqqFTSWpp7");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#fa8bff, #2bd2ff, #2bff88, #fa8bff);
+  opacity: 0.9;
+}
+
+#record20:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record21 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmNVojSQ5NmrVvdWLMZmMpuMkvPtv854Xu4zn33pGvTxnu");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#a8edea, #fed6e3, #ffd89b, #a8edea);
+  opacity: 0.9;
+}
+
+#record21:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record22 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmRYqHi8pshFk2VaeEpEWFtJsyjQCy18CcPVNhHK5kTJwY");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#ff0844, #ffb199, #ff0844, #ffb199);
+  opacity: 0.9;
+}
+
+#record22:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record23 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmWBoyMqxNfjHvroX19iHA5wq85Kbvg4AF7T3HASpwBeGS");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#3f5efb, #fc466b, #3f5efb, #fc466b);
+  opacity: 0.9;
+}
+
+#record23:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record24 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmWJVF1ez8wffZV7Gz4A1BZDs87FVHLXVkeaS8615sL4hT");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#11998e, #38ef7d, #11998e, #38ef7d);
+  opacity: 0.9;
+}
+
+#record24:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record25 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmTbz6CKqx5m32BRhW1Kf9JxVHDwYov7xxm4pKSMAjZGGx");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#ee0979, #ff6a00, #ee0979, #ff6a00);
+  opacity: 0.9;
+}
+
+#record25:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record26 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/Qmc5MEdCHbCaQp9JjzwAzd4aEKToHqeHy65pqsUJCo5c9d");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#834d9b, #d04ed6, #834d9b, #d04ed6);
+  opacity: 0.9;
+}
+
+#record26:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record27 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmP2eVT8z3jDfikPVmZoGAhk8qWs6qwtSEwMzc4Mht98fE");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#ff9966, #ff5e62, #ff9966, #ff5e62);
+  opacity: 0.9;
+}
+
+#record27:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record28 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmbXTFYEpiEGFFQdPnvWTGbXPtSwZ6sfWM73P7db67dfV5");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#7f7fd5, #86a8e7, #91eae4, #7f7fd5);
+  opacity: 0.9;
+}
+
+#record28:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record29 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmNXkEoj6oCTURV31sVfxsYEGdU9b2bRyJWTHAMktzpyvp");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#e96443, #904e95, #e96443, #904e95);
+  opacity: 0.9;
+}
+
+#record29:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#record30 {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmbnsKepJHu3i4FLcygcmEbEd5h3a9hgbuq8QcCeN7aE98");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#373b44, #4286f4, #373b44, #4286f4);
+  opacity: 0.9;
+}
+
+#record30:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
+#conic {
+  background: conic-gradient(
+    #f7f7f3,
+    #dbdfb2,
+    #aeeccf,
+    #cedfde,
+    #f1d2ef,
+    #f6ebf7,
+    #f0ecf6,
+    #ffffff,
+    #f6f7e6
+  );
+}
+
+#conicBlack {
+  background: conic-gradient(
+    #000000,
+    #131313,
+    #000000,
+    #202022,
+    #000000,
+    #131313,
+    #000000
+  );
+}
+
+#panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.5);
+  filter: blur(5px);
+  background: linear-gradient(to right, white, #b9d9ff, #0091ff, #44afd3);
+  opacity: 80%;
+}
+
+button:active {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+#videoplayer {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmekpQQEtQBP1M71SohCHiDRQbV1Sc2bKveVvwEfzAJCPx");
+  background-color: white;
+  background-position: center;
+  background-size: cover;
+}
+
+#videoplayer:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.2);
+  filter: blur(5px);
+}
+
+input[type="range"] {
+  background-color: black;
+  outline: none;
+  -webkit-appearance: none;
+  border-color: white;
+  border-width: 1px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: black;
+  border-radius: 3px;
+  height: 5px;
+  border-color: white;
+  border-width: 1px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #ffc800;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -5px;
+}
+
+input[type="range"]::-moz-range-track {
+  background: black;
+  border-radius: 3px;
+  height: 5px;
+  border-color: white;
+  border-width: 1px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #ffc800;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-progress {
+  background: #ffc800;
+  border-radius: 3px;
+  height: 5px;
+}
+
+input[type="range"]::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+  height: 5px;
+}
+
+input[type="range"]::-ms-fill-lower {
+  background: #ffc800;
+  border-radius: 3px;
+  height: 5px;
+}
+
+input[type="range"]::-ms-fill-upper {
+  background: black;
+  border-radius: 3px;
+  height: 5px;
+}
+
+input[type="range"]::-ms-thumb {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #3694ff;
+  cursor: pointer;
+}
+
+#radialPinkBorder {
+  background: radial-gradient(
+    circle,
+    rgba(248, 245, 230, 1) 0%,
+    rgba(255, 241, 206, 1) 17%,
+    rgba(253, 254, 221, 1) 33%,
+    rgba(249, 215, 141, 1) 53%,
+    rgba(244, 198, 167, 1) 73%,
+    rgba(238, 192, 146, 1) 86%,
+    rgba(255, 196, 191, 1) 100%
+  );
+  opacity: 0.9;
+}
+
+#outside2 {
+  background: linear-gradient(
+    #f6f7e6,
+    #f1d2ef,
+    #f6ebf7,
+    #f0ecf6,
+    #ffffff,
+    #f6f7e6
+  );
+}
+
+#crt {
+  background: linear-gradient(to right, #fc9cf3, #b9d9ff, #0091ff, #fd99dc);
 }

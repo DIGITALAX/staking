@@ -1,0 +1,173 @@
+{
+  "badges": {
+    "gpu": "GPU",
+    "collector": "Coleccionista",
+    "critique": "Crítico",
+    "creative": "Creativo",
+    "fashion": "Moda",
+    "synth": "Sintetizador",
+    "generative": "Generativo",
+    "stunning": "Impresionante",
+    "viral": "Viral",
+    "draft_master": "Maestro del Borrador",
+    "hot": "Caliente",
+    "trending": "En Tendencia",
+    "merchant": "Comerciante",
+    "top_weekly": "Top Semanal",
+    "top_monthly": "Top Mensual",
+    "innovator": "Innovador",
+    "visionary": "Visionario",
+    "pioneer": "Pionero",
+    "builder": "Constructor",
+    "catalyst": "Catalizador",
+    "maverick": "Inconformista",
+    "disruptor": "Disruptor",
+    "curator_pro": "Curador Pro",
+    "architect": "Arquitecto",
+    "legend": "Leyenda",
+    "elite": "Élite",
+    "champion": "Campeón",
+    "oracle": "Oráculo",
+    "mystic": "Místico",
+    "sage": "Sabio"
+  },
+  "marquee": "Impactados por el número y tamaño de las olas, observamos con fascinación mientras un staker tras otro escaneaba las piscinas. Esta máquina transformando su contenido en una deslumbrante exhibición de luz y sonido.",
+  "connectWallet": "Conectar Billetera",
+  "deLoom": "De-Loom",
+  "deLoomDescription": "Accede al staking heredado, v1 en Ethereum, v2 en Polygon. Retira balances, recoge recompensas residuales, sigue los hilos y toma lo que es tuyo. Abanícate de vuelta a través de la red, o entra directamente en las piscinas V3 Quiltoide.",
+  "recuts": "Recuts",
+  "recutsSections": {
+    "genesisV3Title": "Genesis V3",
+    "genesisV3Description": "Entonces estuviste ahí en el origen. Justo después del DeFi Summer, cuando los mercados NFT aún eran conjetura y la señal vivía en estructura latente. Desde aquellas primeras prendas digitales en Ethereum, hasta uno de los primeros movimientos de protocolo hacia L2s, y en algún punto de la aceleración, una pasarela Web3 a medianoche en Nueva York.<br /><br />Caos y commits, caos y commits. Código e infraestructura, e infraestructura y código. Código para reforzar la descentralización y la agencia del usuario. Para rehacer toda una industria desde primeros principios: manufactura, instrumentos programables, primitivos financieros.<br /><br />No hace falta repetir los detalles. Estuviste ahí.<br /><br />Hora de V3. Un <a href=\"https://genesis.digitalax.xyz/\" class=\"underline cursor-pointer\" target=\"_blank\" rel=\"noreferrer\">Lens mint</a> lleva todo hacia el staking Quiltoide. O salta directo a los exclusivos de <a href=\"https://web3fashionweek.com/\" class=\"underline cursor-pointer\" target=\"_blank\" rel=\"noreferrer\">Web3 Fashion Week</a> y al settlement scripting de <a href=\"https://futures.themanufactory.xyz/\" class=\"underline cursor-pointer\" target=\"_blank\" rel=\"noreferrer\">FGO Futures</a>. Ya sabes cómo funciona esto.",
+    "ionicTitle": "Ionic",
+    "ionicDescription": "Podev3 es Ionic. Acuña en <a href=\"https://ionic.digitalax.xyz/\" class=\"underline cursor-pointer\" target=\"_blank\" rel=\"noreferrer\">Lens</a>, luego mira, lee, escucha, viste, cringe, consume, repite.<br /><br />pero, ¿alguna vez te detuviste a pensar: qué pasa si recuperamos la agencia de producir? rompe las paredes artificiales que hacen que la moda parezca una categoría exótica separada. un patrón de prenda es media. un derecho de producción es media. cuando lo ves, el marco de evaluación se vuelve universal en lugar de nicho. la moda en sí, lo que vestimos, en cualquier lugar, es media.<br /><br />Continúa desde The DLTA, valora en <a href=\"https://ionic.digitalax.xyz/\" class=\"underline cursor-pointer\" target=\"_blank\" rel=\"noreferrer\">Ionic</a>, liquida con <a href=\"https://futures.themanufactory.xyz/\" class=\"underline cursor-pointer\" target=\"_blank\" rel=\"noreferrer\">FGO Futures</a>, y acuña un nuevo armario esta temporada en la pasarela de <a href=\"https://web3fashionweek.com/\" class=\"underline cursor-pointer\" target=\"_blank\" rel=\"noreferrer\">Web3 Fashion Week</a>.",
+    "w3fTitle": "W3F",
+    "w3fDescription": "Las decisiones de tejido se propagan hacia siluetas renderizadas. Los clusters de GPU traducen la lógica de patrones en ciclos de pasarela, estados de iluminación, tensión facial. Un taller ajusta una costura. Otro recompila un look. Otro resuelve una cara. Multiplica esto por un millón de distritos de prendas, un millón de ciudades, cosidas por el ancho de banda y la latencia, microfábricas de manufactura computacional operadas enteramente desde una pantalla.<br /><br />La <a href=\"https://globaldesignernetwork.com/\" class=\"underline cursor-pointer\" target=\"_blank\" rel=\"noreferrer\">Global Designer Network</a> y la <a href=\"https://gms.globaldesignernetwork.com/\" class=\"underline cursor-pointer\" target=\"_blank\" rel=\"noreferrer\">Global Models Syndicate</a> ganan, distribuyen y comercian W3F."
+  },
+  "runtime": "Runtime",
+  "poolSearch": "Búsqueda de Piscinas",
+  "switchFailed": "Cambio de red fallido. Inténtalo de nuevo.",
+  "claimFailed": "Reclamación fallida. Inténtalo de nuevo.",
+  "unstakeFailed": "Retiro fallido. Inténtalo de nuevo.",
+  "unstakeAllFailed": "Retiro total fallido. Inténtalo de nuevo.",
+  "rewards": "Recompensas:",
+  "unstakeEth": "retiro-eth",
+  "unstakePoly": "retiro-poly",
+  "poolStakers": "Stakers en la piscina:",
+  "poolClaims": "Reclamaciones de la piscina:",
+  "yourClaimed": "Tus reclamaciones:",
+  "connectWalletPosition": "Conecta la billetera para ver tu posición.",
+  "switchTo": "Cambiar a",
+  "stakedMona": "MONA en staking:",
+  "stakedLp": "LP en staking:",
+  "claimable": "Reclamable:",
+  "unstakeAllMona": "Retirar todo MONA",
+  "unstakeAllLp": "Retirar todo LP",
+  "claimRewards": "Reclamar recompensas",
+  "stakedNfts": "NFTs en staking:",
+  "unstakeAllNfts": "Retirar todos los NFTs",
+  "unstakeHash": "Retirar #",
+  "pools": {
+    "ethGenesisV1": {
+      "name": "Staking Genesis V1",
+      "shortName": "Genesis V1",
+      "description": "Piscina Genesis de Ethereum"
+    },
+    "ethParent": {
+      "name": "Staking NFT 721",
+      "shortName": "Parent 721",
+      "description": "Piscina de Garment 721 de Ethereum"
+    },
+    "polyMona": {
+      "name": "Staking MONA / LP",
+      "shortName": "MONA / LP",
+      "description": "Piscina MONA + LP de Polygon"
+    },
+    "polyNft": {
+      "name": "Staking NFT",
+      "shortName": "Staking NFT",
+      "description": "Piscina principal de NFT de Polygon"
+    },
+    "polyNftOld": {
+      "name": "Staking NFT (Heredado)",
+      "shortName": "NFT Heredado",
+      "description": "Piscina heredada de Polygon"
+    },
+    "polyGenesisV2": {
+      "name": "Staking Genesis V2",
+      "shortName": "Genesis V2",
+      "description": "Piscina Genesis de Polygon"
+    },
+    "polyW3f": {
+      "name": "GDN V1 ERC20",
+      "shortName": "GDN V1",
+      "description": "Piscina ERC20 GDN V1 de Polygon"
+    },
+    "polyGdn": {
+      "name": "Staking Pattern House I",
+      "shortName": "Pattern House I",
+      "description": "Piscina Pattern House I de Polygon"
+    },
+    "polyPodeGuild": {
+      "name": "Staking PODE Guild",
+      "shortName": "PODE Guild",
+      "description": "Piscina de guild PODE de Polygon"
+    },
+    "polyPodeGuildWhitelist": {
+      "name": "Staking PODE Guild Whitelist",
+      "shortName": "PODE Guild WL",
+      "description": "Piscina de guild PODE con whitelist de Polygon"
+    },
+    "polyRealm": {
+      "name": "Staking V1 Realm",
+      "shortName": "V1 Realm",
+      "description": "Piscina V1 Realm de Polygon"
+    }
+  },
+  "poolSearchPresets": "Preajustes comunes, novedosos y destacados:",
+  "searchPlaceholder": "buscar piscinas quiltoide",
+  "pool": "Piscina",
+  "project": "Proyecto",
+  "lensStaking": "Staking Lens",
+  "comingSoon": "próximamente",
+  "ethTrace": "Traza ETH",
+  "polyTrace": "Traza POLY",
+  "yourTrace": "Tu Traza",
+  "name": "Nombre",
+  "symbol": "Símbolo",
+  "decimals": "Decimales",
+  "totalSupply": "Suministro total",
+  "availableToMint": "Disponible para acuñar",
+  "freezeCap": "Congelar límite",
+  "cap": "Límite",
+  "yes": "sí",
+  "no": "no",
+  "recentTransfers": "Transferencias recientes",
+  "noTransfers": "Aún no hay transferencias.",
+  "tx": "Tx",
+  "amount": "Cantidad",
+  "block": "Bloque",
+  "stakers": "Stakers",
+  "claims": "Reclamaciones",
+  "staked": "En staking",
+  "poolsTitle": "Piscinas",
+  "yourClaimedTotal": "Total reclamado",
+  "yourStakedCount": "Cantidad en staking",
+  "poolsOverview": "Resumen de piscinas (subgraph)",
+  "totalClaims": "Total de reclamaciones",
+  "totalStaked": "Total en staking",
+  "materialStaking": "Staking Material",
+  "topics": {
+    "inTheStyleOf": "al estilo de",
+    "genre": "género",
+    "format": "formato",
+    "colors": "colores",
+    "lighting": "iluminación",
+    "engines": "motores",
+    "designTools": "herramientas de diseño",
+    "techniques": "técnicas",
+    "fashion": "moda",
+    "equipment": "equipo",
+    "descriptive": "descriptivo"
+  }
+}

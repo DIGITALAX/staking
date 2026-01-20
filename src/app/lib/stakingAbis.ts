@@ -1,0 +1,96 @@
+export const MONA_STAKING_ABI = [
+  {
+    type: "function",
+    name: "getStakedBalance",
+    stateMutability: "view",
+    inputs: [{ name: "_user", type: "address" }],
+    outputs: [{ type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "getStakedLPBalance",
+    stateMutability: "view",
+    inputs: [{ name: "_user", type: "address" }],
+    outputs: [{ type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "unclaimedRewards",
+    stateMutability: "view",
+    inputs: [{ name: "_user", type: "address" }],
+    outputs: [{ type: "uint256" }, { type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "tokensClaimable",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ type: "bool" }],
+  },
+  {
+    type: "function",
+    name: "unstake",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "_amount", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "unstakeLP",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "_amount", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "claimReward",
+    stateMutability: "nonpayable",
+    inputs: [],
+    outputs: [],
+  },
+] as const;
+
+export const NFT_STAKING_ABI = [
+  {
+    type: "function",
+    name: "getStakedTokens",
+    stateMutability: "view",
+    inputs: [{ name: "_user", type: "address" }],
+    outputs: [{ type: "uint256[]" }],
+  },
+  {
+    type: "function",
+    name: "unclaimedRewards",
+    stateMutability: "view",
+    inputs: [{ name: "_user", type: "address" }],
+    outputs: [{ type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "tokensClaimable",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ type: "bool" }],
+  },
+  {
+    type: "function",
+    name: "unstake",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "_tokenId", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "unstakeBatch",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "tokenIds", type: "uint256[]" }],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "claimReward",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "_user", type: "address" }],
+    outputs: [],
+  },
+] as const;

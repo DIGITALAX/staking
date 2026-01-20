@@ -1,10 +1,8 @@
+import { getDictionary } from "./dictionaries";
 import { tParams } from "./layout";
 import { Metadata } from "next";
 import { LOCALES } from "@/app/lib/constants";
-import { getDictionary } from "./[lang]/dictionaries";
-import Entry from "./components/Common/modules/Entry";
-import { Suspense } from "react";
-import Wrapper from "./components/Common/modules/Wrapper";
+import Entry from "../components/Common/modules/Entry";
 
 export async function generateMetadata({
   params,
@@ -51,16 +49,9 @@ export async function generateMetadata({
     },
   };
 }
-export default async function Home() {
-  const dict = await (getDictionary as (locale: any) => Promise<any>)("en");
-  return (
-    <Wrapper
-      dict={dict}
-      page={
-        <Suspense fallback={<></>}>
-          <Entry dict={dict} />
-        </Suspense>
-      }
-    />
-  );
+
+export default async function IndexPage({ params }: { params: tParams }) {
+  const { lang } = await params;
+  const dict = await (getDictionary as (locale: any) => Promise<any>)(lang);
+  return <Entry dict={dict} />;
 }
