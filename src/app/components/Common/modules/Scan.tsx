@@ -80,7 +80,7 @@ const Scan: FunctionComponent<ScanProps> = ({
             <div className="relative w-fit h-fit flex items-center justify-center flex flex-row gap-3">
               <div className="relative text-white font-dosis uppercase w-fit h-fit flex items-center justify-center flex-row gap-2">
                 <div
-                  className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-sewingHS"
+                  className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-pointer"
                   onClick={() => {
                     const newIdioma =
                       chosenLanguage > 0
@@ -96,7 +96,7 @@ const Scan: FunctionComponent<ScanProps> = ({
                   {indiceAIdioma[chosenLanguage]}
                 </div>
                 <div
-                  className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-sewingHS"
+                  className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-pointer"
                   onClick={() => {
                     const newIdioma =
                       chosenLanguage < 3
