@@ -317,7 +317,7 @@ const Stats = ({ dict }: { dict: any }) => {
               ...(polyPoolsQuery.data?.pools || []),
             ].length > 0 && (
               <div className="flex flex-col gap-2">
-                <div className="font-digiB text-lg">
+                <div className="font-digiB text-white text-lg">
                   {dict?.poolsOverview}
                 </div>
 
