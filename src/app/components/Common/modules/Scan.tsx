@@ -1,11 +1,23 @@
 import { FunctionComponent, JSX, useContext, useState } from "react";
 import MarqueeText from "react-fast-marquee";
 import Image from "next/image";
-import { INFURA_GATEWAY, PANEL_KEY, PANELES } from "@/app/lib/constants";
+import {
+  idiomaAIndice,
+  Idiomas,
+  indiceAIdioma,
+  INFURA_GATEWAY,
+  PANEL_KEY,
+  PANELES,
+} from "@/app/lib/constants";
 import { ModalContext } from "@/app/providers";
 import { ScanProps } from "../types/common.types";
 import { ConnectKitButton } from "connectkit";
 import FullScreenVideo from "../../Modules/modules/FullScreenVideo";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  PiArrowFatLinesLeftFill,
+  PiArrowFatLinesRightFill,
+} from "react-icons/pi";
 
 const Scan: FunctionComponent<ScanProps> = ({
   dict,
@@ -14,6 +26,20 @@ const Scan: FunctionComponent<ScanProps> = ({
 }): JSX.Element => {
   const [open, setOpen] = useState<boolean>(false);
   const context = useContext(ModalContext);
+  const path = usePathname();
+  const router = useRouter();
+  const [chosenLanguage, setChosenLanguage] = useState<number>(
+    idiomaAIndice[(path.match(/(?<=\/)(en|es|ar|pt)(?=\/)/)?.[0] ?? "en") as Idiomas],
+  );
+  const changeLanguage = (lang: string) => {
+    const segments = path.split("/");
+    segments[1] = lang;
+    const newPath = segments.join("/");
+
+    document.cookie = `NEXT_LOCALE=${lang}; path=/; SameSite=Lax`;
+
+    router.push(newPath);
+  };
 
   return (
     <div className="flex relative flex-col w-full h-full">
@@ -51,6 +77,40 @@ const Scan: FunctionComponent<ScanProps> = ({
                 />
               </div>
             </div>
+            <div className="relative w-fit h-fit flex items-center justify-center flex flex-row gap-3">
+              <div className="relative text-white font-dosis uppercase w-fit h-fit flex items-center justify-center flex-row gap-2">
+                <div
+                  className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-sewingHS"
+                  onClick={() => {
+                    const newIdioma =
+                      chosenLanguage > 0
+                        ? chosenLanguage - 1
+                        : 3;
+                    changeLanguage(indiceAIdioma[newIdioma]);
+                    setChosenLanguage(newIdioma);
+                  }}
+                >
+                  <PiArrowFatLinesLeftFill color="white" size={20} />
+                </div>
+                <div className="relative w-fit h-fit flex items-center justify-center">
+                  {indiceAIdioma[chosenLanguage]}
+                </div>
+                <div
+                  className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-sewingHS"
+                  onClick={() => {
+                    const newIdioma =
+                      chosenLanguage < 3
+                        ? chosenLanguage + 1
+                        : 0;
+                    changeLanguage(indiceAIdioma[newIdioma]);
+                    setChosenLanguage(newIdioma);
+                  }}
+                >
+                  <PiArrowFatLinesRightFill color="white" size={20} />
+                </div>
+              </div>
+            </div>
+
             <ConnectKitButton.Custom>
               {({ isConnected, show, address }) => (
                 <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto rounded-lg border-2 border-black gap-1 pl-1 pr-2 bg-bluey py-2">

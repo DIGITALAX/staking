@@ -605,3 +605,24 @@ export const TOKEN_ADDRESSES = {
     mona: MONA.lens,
   },
 };
+
+export const idiomaAIndice: { [key in Idiomas]: number } = {
+  ["en"]: 0,
+  ["es"]: 1,
+  ["ar"]: 2,
+  ["pt"]: 3,
+};
+
+export enum Idiomas {
+  Ingles = "en",
+  Español = "es",
+  Árabe = "ar",
+  Portugués = "pt",
+}
+
+export const indiceAIdioma: { [key in number]: string } = {
+  [0]: "en",
+  [1]: "es",
+  [2]: "ar",
+  [3]: "pt",
+};
