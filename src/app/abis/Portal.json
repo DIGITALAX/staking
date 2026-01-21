@@ -1,0 +1,9 @@
+[
+  {
+    "type": "function",
+    "name": "podeNft",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address" }]
+  }
+]

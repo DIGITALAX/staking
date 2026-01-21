@@ -1,31 +1,57 @@
-import { getSubgraphEndpoint } from "@/app/lib/subgraph";
 import { useAccount } from "wagmi";
 import { useSubgraphPools, useSubgraphStakersByAddress } from "./useSubgraph";
-import { useEffect, useMemo, useState } from "react";
-import { createPublicClient, http, parseAbiItem, type PublicClient } from "viem";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
-  ERC20_ABI,
-  ERC721_ABI,
-  MONA_EXTENDED_ABI,
-  PODE_PORTAL_ABI,
-} from "@/app/lib/tokenAbis";
+  createPublicClient,
+  http,
+  parseAbiItem,
+  type PublicClient,
+} from "viem";
 import { MONA, TOKEN_ADDRESSES } from "@/app/lib/constants";
 import { MonaStats, TransferItem } from "../types/common.types";
 import { chains } from "@lens-chain/sdk/viem";
 import { mainnet, polygon } from "viem/chains";
+import { ModalContext } from "@/app/providers";
+import { ABIS } from "@/app/abis";
+
+const delay = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+
+const createRateLimiter = (minDelayMs: number) => {
+  let lastRun = 0;
+  let pending: Promise<any> = Promise.resolve();
+
+  return async <T>(fn: () => Promise<T>) => {
+    const next = pending.then(async () => {
+      const now = Date.now();
+      const wait = Math.max(0, minDelayMs - (now - lastRun));
+      if (wait) {
+        await delay(wait);
+      }
+      lastRun = Date.now();
+      return fn();
+    });
+
+    pending = next.catch(() => undefined);
+    return next;
+  };
+};
 
 const useStats = () => {
   const { address } = useAccount();
-  const ethEndpoint = getSubgraphEndpoint("eth");
-  const polyEndpoint = getSubgraphEndpoint("poly");
-  const ethPoolsQuery = useSubgraphPools(ethEndpoint);
-  const polyPoolsQuery = useSubgraphPools(polyEndpoint);
+  const context = useContext(ModalContext);
+  const rateLimiterRef = useRef(createRateLimiter(250));
+  const statsLoadingRef = useRef(false);
+  const ethPoolsQuery = useSubgraphPools("eth");
+  const polyPoolsQuery = useSubgraphPools("poly");
   const ethStakersQuery = useSubgraphStakersByAddress(
-    ethEndpoint,
+    "eth",
     address?.toLowerCase(),
   );
   const polyStakersQuery = useSubgraphStakersByAddress(
-    polyEndpoint,
+    "poly",
     address?.toLowerCase(),
   );
 
@@ -57,8 +83,12 @@ const useStats = () => {
     [],
   );
 
-  const [ethMona, setEthMona] = useState<MonaStats>();
-  const [polyMona, setPolyMona] = useState<MonaStats>();
+  const [ethMona, setEthMona] = useState<MonaStats | undefined>(
+    context?.statsCache.ethMona,
+  );
+  const [polyMona, setPolyMona] = useState<MonaStats | undefined>(
+    context?.statsCache.polyMona,
+  );
   const [walletMonaEth, setWalletMonaEth] = useState<bigint>();
   const [walletMonaPoly, setWalletMonaPoly] = useState<bigint>();
   const [walletMonaLens, setWalletMonaLens] = useState<bigint>();
@@ -70,7 +100,9 @@ const useStats = () => {
   const [walletDlta, setWalletDlta] = useState<bigint>();
   const [decoDecimals, setDecoDecimals] = useState<number>(18);
   const [dltaDecimals, setDltaDecimals] = useState<number>(18);
-  const [podeV1Address, setPodeV1Address] = useState<string>();
+  const [podeV1Address, setPodeV1Address] = useState<string | undefined>(
+    context?.statsCache.podeV1Address,
+  );
 
   useEffect(() => {
     const fetchRecentTransfers = async (
@@ -78,10 +110,11 @@ const useStats = () => {
       monaAddress: `0x${string}`,
     ) => {
       try {
+        const rateLimit = rateLimiterRef.current;
         const transferEvent = parseAbiItem(
           "event Transfer(address indexed from, address indexed to, uint256 value)",
         );
-        const latest = await client.getBlockNumber();
+        const latest = await rateLimit(() => client.getBlockNumber());
         const step = 50_000n;
         const logs: TransferItem[] = [];
         let toBlock = latest;
@@ -89,12 +122,14 @@ const useStats = () => {
 
         while (logs.length < 10 && toBlock > 0n && loops < 8) {
           const fromBlock = toBlock > step ? toBlock - step : 0n;
-          const batch = await client.getLogs({
-            address: monaAddress,
-            event: transferEvent,
-            fromBlock,
-            toBlock,
-          });
+          const batch = await rateLimit(() =>
+            client.getLogs({
+              address: monaAddress,
+              event: transferEvent,
+              fromBlock,
+              toBlock,
+            }),
+          );
           batch.forEach((log) => {
             logs.push({
               hash: log.transactionHash ?? "",
@@ -121,105 +156,178 @@ const useStats = () => {
     };
 
     const loadMonaStats = async () => {
+      const rateLimit = rateLimiterRef.current;
       const monaEthAddress = MONA.eth as `0x${string}`;
       const monaPolyAddress = MONA.poly as `0x${string}`;
 
-      const [
-        ethName,
-        ethSymbol,
-        ethDecimals,
-        ethSupply,
-        availableToMint,
-        freezeCap,
-        cap,
-      ] = await Promise.all([
+      const ethName = (await rateLimit(() =>
         ethClient.readContract({
           address: monaEthAddress,
-          abi: MONA_EXTENDED_ABI,
+          abi: ABIS.MONA,
           functionName: "name",
         }),
+      )) as string;
+      const ethSymbol = (await rateLimit(() =>
         ethClient.readContract({
           address: monaEthAddress,
-          abi: MONA_EXTENDED_ABI,
+          abi: ABIS.MONA,
           functionName: "symbol",
         }),
+      )) as string;
+      const ethDecimals = (await rateLimit(() =>
         ethClient.readContract({
           address: monaEthAddress,
-          abi: MONA_EXTENDED_ABI,
+          abi: ABIS.MONA,
           functionName: "decimals",
         }),
+      )) as number;
+      const ethSupply = (await rateLimit(() =>
         ethClient.readContract({
           address: monaEthAddress,
-          abi: MONA_EXTENDED_ABI,
+          abi: ABIS.MONA,
           functionName: "totalSupply",
         }),
+      )) as bigint;
+      const availableToMint = (await rateLimit(() =>
         ethClient.readContract({
           address: monaEthAddress,
-          abi: MONA_EXTENDED_ABI,
+          abi: ABIS.MONA,
           functionName: "availableToMint",
         }),
+      )) as bigint;
+      const freezeCap = (await rateLimit(() =>
         ethClient.readContract({
           address: monaEthAddress,
-          abi: MONA_EXTENDED_ABI,
+          abi: ABIS.MONA,
           functionName: "freezeCap",
         }),
+      )) as boolean;
+      const cap = (await rateLimit(() =>
         ethClient.readContract({
           address: monaEthAddress,
-          abi: MONA_EXTENDED_ABI,
+          abi: ABIS.MONA,
           functionName: "cap",
         }),
-      ]);
+      )) as bigint;
 
-      const [polyName, polySymbol, polyDecimals, polySupply] =
-        await Promise.all([
-          polyClient.readContract({
-            address: monaPolyAddress,
-            abi: ERC20_ABI,
-            functionName: "name",
-          }),
-          polyClient.readContract({
-            address: monaPolyAddress,
-            abi: ERC20_ABI,
-            functionName: "symbol",
-          }),
-          polyClient.readContract({
-            address: monaPolyAddress,
-            abi: ERC20_ABI,
-            functionName: "decimals",
-          }),
-          polyClient.readContract({
-            address: monaPolyAddress,
-            abi: ERC20_ABI,
-            functionName: "totalSupply",
-          }),
-        ]);
+      const polyName = (await rateLimit(() =>
+        polyClient.readContract({
+          address: monaPolyAddress,
+          abi: ABIS.ERC20,
+          functionName: "name",
+        }),
+      )) as string;
+      const polySymbol = (await rateLimit(() =>
+        polyClient.readContract({
+          address: monaPolyAddress,
+          abi: ABIS.ERC20,
+          functionName: "symbol",
+        }),
+      )) as string;
+      const polyDecimals = (await rateLimit(() =>
+        polyClient.readContract({
+          address: monaPolyAddress,
+          abi: ABIS.ERC20,
+          functionName: "decimals",
+        }),
+      )) as number;
+      const polySupply = (await rateLimit(() =>
+        polyClient.readContract({
+          address: monaPolyAddress,
+          abi: ABIS.ERC20,
+          functionName: "totalSupply",
+        }),
+      )) as bigint;
 
       const [ethTransfers, polyTransfers] = await Promise.all([
         fetchRecentTransfers(ethClient, monaEthAddress),
         fetchRecentTransfers(polyClient, monaPolyAddress),
       ]);
 
-      setEthMona({
-        name: ethName,
-        symbol: ethSymbol,
-        decimals: Number(ethDecimals),
-        totalSupply: ethSupply,
-        availableToMint,
-        freezeCap,
-        cap,
-        transfers: ethTransfers,
-      });
-      setPolyMona({
-        name: polyName,
-        symbol: polySymbol,
-        decimals: Number(polyDecimals),
-        totalSupply: polySupply,
-        transfers: polyTransfers,
-      });
+      return {
+        ethMona: {
+          name: ethName,
+          symbol: ethSymbol,
+          decimals: ethDecimals,
+          totalSupply: ethSupply,
+          availableToMint,
+          freezeCap,
+          cap,
+          transfers: ethTransfers,
+        },
+        polyMona: {
+          name: polyName,
+          symbol: polySymbol,
+          decimals: polyDecimals,
+          totalSupply: polySupply,
+          transfers: polyTransfers,
+        },
+      };
     };
 
-    loadMonaStats();
-  }, [ethClient, polyClient]);
+    const loadCachedStats = () => {
+      if (!context?.statsCache.loaded) return false;
+      setEthMona(context.statsCache.ethMona);
+      setPolyMona(context.statsCache.polyMona);
+      if (context.statsCache.podeV1Address) {
+        setPodeV1Address(context.statsCache.podeV1Address);
+      }
+      return true;
+    };
+
+    if (loadCachedStats() || statsLoadingRef.current) {
+      return;
+    }
+
+    statsLoadingRef.current = true;
+    let active = true;
+
+    loadMonaStats()
+      .then((stats) => {
+        if (!active) return;
+        setEthMona(stats.ethMona);
+        setPolyMona(stats.polyMona);
+        context?.setStatsCache((prev) => ({
+          ...prev,
+          loaded: true,
+          ethMona: stats.ethMona,
+          polyMona: stats.polyMona,
+        }));
+      })
+      .finally(() => {
+        statsLoadingRef.current = false;
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [context, ethClient, polyClient]);
+
+  useEffect(() => {
+    if (context?.statsCache.podeV1Address) {
+      setPodeV1Address(context.statsCache.podeV1Address);
+      return;
+    }
+
+    const loadPodeV1 = async () => {
+      const rateLimit = rateLimiterRef.current;
+      const portalAddress = TOKEN_ADDRESSES.eth.podePortal as `0x${string}`;
+      const podeNft = (await rateLimit(() =>
+        ethClient.readContract({
+          address: portalAddress,
+          abi: ABIS.Portal,
+          functionName: "podeNft",
+        }),
+      )) as `0x${string}`;
+      setPodeV1Address(podeNft);
+      context?.setStatsCache((prev) => ({
+        ...prev,
+        podeV1Address: podeNft,
+      }));
+    };
+
+    loadPodeV1();
+  }, [context, ethClient]);
 
   useEffect(() => {
     if (!address) {
@@ -236,32 +344,39 @@ const useStats = () => {
     }
 
     const loadWalletBalances = async () => {
+      const rateLimit = rateLimiterRef.current;
       const monaEthAddress = MONA.eth as `0x${string}`;
       const monaPolyAddress = MONA.poly as `0x${string}`;
       const monaLensAddress = MONA.lens as `0x${string}`;
       const [ethBalance, polyBalance, lensBalance] = await Promise.all([
-        ethClient.readContract({
-          address: monaEthAddress,
-          abi: ERC20_ABI,
-          functionName: "balanceOf",
-          args: [address],
-        }),
-        polyClient.readContract({
-          address: monaPolyAddress,
-          abi: ERC20_ABI,
-          functionName: "balanceOf",
-          args: [address],
-        }),
-        lensClient.readContract({
-          address: monaLensAddress,
-          abi: ERC20_ABI,
-          functionName: "balanceOf",
-          args: [address],
-        }),
+        rateLimit(() =>
+          ethClient.readContract({
+            address: monaEthAddress,
+            abi: ABIS.ERC20,
+            functionName: "balanceOf",
+            args: [address],
+          }),
+        ),
+        rateLimit(() =>
+          polyClient.readContract({
+            address: monaPolyAddress,
+            abi: ABIS.ERC20,
+            functionName: "balanceOf",
+            args: [address],
+          }),
+        ),
+        rateLimit(() =>
+          lensClient.readContract({
+            address: monaLensAddress,
+            abi: ABIS.ERC20,
+            functionName: "balanceOf",
+            args: [address],
+          }),
+        ),
       ]);
-      setWalletMonaEth(ethBalance);
-      setWalletMonaPoly(polyBalance);
-      setWalletMonaLens(lensBalance);
+      setWalletMonaEth(ethBalance as bigint);
+      setWalletMonaPoly(polyBalance as bigint);
+      setWalletMonaLens(lensBalance as bigint);
 
       const genesisV1Address = TOKEN_ADDRESSES.eth.genesisV1 as `0x${string}`;
       const genesisV2Address = TOKEN_ADDRESSES.poly.genesisV2 as `0x${string}`;
@@ -278,83 +393,85 @@ const useStats = () => {
         decoDec,
         dltaDec,
       ] = await Promise.all([
-        ethClient.readContract({
-          address: genesisV1Address,
-          abi: ERC721_ABI,
-          functionName: "balanceOf",
-          args: [address],
-        }),
-        polyClient.readContract({
-          address: genesisV2Address,
-          abi: ERC721_ABI,
-          functionName: "balanceOf",
-          args: [address],
-        }),
-        polyClient.readContract({
-          address: podeV2Address,
-          abi: ERC721_ABI,
-          functionName: "balanceOf",
-          args: [address],
-        }),
-        polyClient.readContract({
-          address: decoAddress,
-          abi: ERC20_ABI,
-          functionName: "balanceOf",
-          args: [address],
-        }),
-        polyClient.readContract({
-          address: dltaAddress,
-          abi: ERC20_ABI,
-          functionName: "balanceOf",
-          args: [address],
-        }),
-        polyClient.readContract({
-          address: decoAddress,
-          abi: ERC20_ABI,
-          functionName: "decimals",
-        }),
-        polyClient.readContract({
-          address: dltaAddress,
-          abi: ERC20_ABI,
-          functionName: "decimals",
-        }),
+        rateLimit(() =>
+          ethClient.readContract({
+            address: genesisV1Address,
+            abi: ABIS.ERC721,
+            functionName: "balanceOf",
+            args: [address],
+          }),
+        ),
+        rateLimit(() =>
+          polyClient.readContract({
+            address: genesisV2Address,
+            abi: ABIS.ERC721,
+            functionName: "balanceOf",
+            args: [address],
+          }),
+        ),
+        rateLimit(() =>
+          polyClient.readContract({
+            address: podeV2Address,
+            abi: ABIS.ERC721,
+            functionName: "balanceOf",
+            args: [address],
+          }),
+        ),
+        rateLimit(() =>
+          polyClient.readContract({
+            address: decoAddress,
+            abi: ABIS.ERC20,
+            functionName: "balanceOf",
+            args: [address],
+          }),
+        ),
+        rateLimit(() =>
+          polyClient.readContract({
+            address: dltaAddress,
+            abi: ABIS.ERC20,
+            functionName: "balanceOf",
+            args: [address],
+          }),
+        ),
+        rateLimit(() =>
+          polyClient.readContract({
+            address: decoAddress,
+            abi: ABIS.ERC20,
+            functionName: "decimals",
+          }),
+        ),
+        rateLimit(() =>
+          polyClient.readContract({
+            address: dltaAddress,
+            abi: ABIS.ERC20,
+            functionName: "decimals",
+          }),
+        ),
       ]);
 
-      setWalletGenesisV1(genesisV1Bal);
-      setWalletGenesisV2(genesisV2Bal);
-      setWalletPodeV2(podeV2Bal);
-      setWalletDeco(decoBal);
-      setWalletDlta(dltaBal);
+      setWalletGenesisV1(genesisV1Bal as bigint);
+      setWalletGenesisV2(genesisV2Bal as bigint);
+      setWalletPodeV2(podeV2Bal as bigint);
+      setWalletDeco(decoBal as bigint);
+      setWalletDlta(dltaBal as bigint);
       setDecoDecimals(Number(decoDec));
       setDltaDecimals(Number(dltaDec));
 
       if (podeV1Address) {
-        const podeV1Bal = await ethClient.readContract({
-          address: podeV1Address as `0x${string}`,
-          abi: ERC721_ABI,
-          functionName: "balanceOf",
-          args: [address],
-        });
-        setWalletPodeV1(podeV1Bal);
+        const podeV1Bal = await rateLimit(() =>
+          ethClient.readContract({
+            address: podeV1Address as `0x${string}`,
+            abi: ABIS.ERC721,
+            functionName: "balanceOf",
+            args: [address],
+          }),
+        );
+        setWalletPodeV1(podeV1Bal as bigint);
       }
     };
 
     loadWalletBalances();
   }, [address, ethClient, polyClient, lensClient, podeV1Address]);
-
-  useEffect(() => {
-    const loadPodeV1 = async () => {
-      const portalAddress = TOKEN_ADDRESSES.eth.podePortal as `0x${string}`;
-      const podeNft = await ethClient.readContract({
-        address: portalAddress,
-        abi: PODE_PORTAL_ABI,
-        functionName: "podeNft",
-      });
-      setPodeV1Address(podeNft);
-    };
-
-    loadPodeV1();
-  }, [ethClient]);
 
   const walletTotals = [
     ...(ethStakersQuery.data?.stakers || []),

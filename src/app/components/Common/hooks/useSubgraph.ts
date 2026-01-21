@@ -7,28 +7,33 @@ import {
   SubgraphStakerResponse,
   SubgraphStakersByAddressResponse,
   SubgraphTokensResponse,
-  fetchSubgraph,
+  SubgraphEndpointKey,
 } from "@/app/lib/subgraph";
+import {
+  graphPolyUnstakeClient,
+  graphEthUnstakeClient,
+} from "@/app/lib/client";
+import { gql } from "@apollo/client";
 
-export const useSubgraphStatus = (endpoint?: string) => {
-  const hasEndpoint = Boolean(endpoint);
-  return {
-    endpoint: endpoint || "",
-    hasEndpoint,
-  };
+const getClientByKey = (key?: SubgraphEndpointKey) => {
+  if (key === "poly") return graphPolyUnstakeClient;
+  if (key === "eth") return graphEthUnstakeClient;
+  return null;
 };
 
-export const useSubgraphPools = (endpoint?: string) => {
-  const { hasEndpoint } = useSubgraphStatus(endpoint);
+export const useSubgraphPools = (key?: SubgraphEndpointKey) => {
   const query = useQuery({
-    queryKey: ["subgraph", "pools", endpoint],
-    queryFn: () =>
-      fetchSubgraph<SubgraphPoolsResponse>(
-        endpoint || "",
-        SUBGRAPH_QUERIES.pools,
-      ),
-    enabled: hasEndpoint,
+    queryKey: ["subgraph", "pools", key],
+    queryFn: async () => {
+      const client = getClientByKey(key);
+      if (!client) throw new Error("SUBGRAPH_CLIENT_MISSING");
+      const result = await client.query<SubgraphPoolsResponse>({
+        query: gql(SUBGRAPH_QUERIES.pools),
+      });
+      return result.data;
+    },
     staleTime: 60_000,
+    enabled: !!key,
   });
 
   const totals = useMemo(() => {
@@ -59,64 +64,78 @@ export const useSubgraphPools = (endpoint?: string) => {
   };
 };
 
-export const useSubgraphPool = (endpoint?: string, poolId?: string) => {
-  const { hasEndpoint } = useSubgraphStatus(endpoint);
+export const useSubgraphPool = (
+  key?: SubgraphEndpointKey,
+  poolId?: string,
+) => {
   return useQuery({
-    queryKey: ["subgraph", "pool", endpoint, poolId],
-    queryFn: () =>
-      fetchSubgraph<SubgraphPoolResponse>(endpoint || "", SUBGRAPH_QUERIES.poolById, {
-        id: poolId,
-      }),
-    enabled: hasEndpoint && Boolean(poolId) && Boolean(endpoint),
+    queryKey: ["subgraph", "pool", key, poolId],
+    queryFn: async () => {
+      const client = getClientByKey(key);
+      if (!client) throw new Error("SUBGRAPH_CLIENT_MISSING");
+      const result = await client.query<SubgraphPoolResponse>({
+        query: gql(SUBGRAPH_QUERIES.poolById),
+        variables: { id: poolId },
+      });
+      return result.data;
+    },
     staleTime: 60_000,
+    enabled: !!key && !!poolId,
   });
 };
 
-export const useSubgraphStaker = (endpoint?: string, stakerId?: string) => {
-  const { hasEndpoint } = useSubgraphStatus(endpoint);
+export const useSubgraphStaker = (
+  key?: SubgraphEndpointKey,
+  stakerId?: string,
+) => {
   return useQuery({
-    queryKey: ["subgraph", "staker", endpoint, stakerId],
-    queryFn: () =>
-      fetchSubgraph<SubgraphStakerResponse>(
-        endpoint || "",
-        SUBGRAPH_QUERIES.stakerById,
-        {
-          id: stakerId,
-        },
-      ),
-    enabled: hasEndpoint && Boolean(stakerId) && Boolean(endpoint),
+    queryKey: ["subgraph", "staker", key, stakerId],
+    queryFn: async () => {
+      const client = getClientByKey(key);
+      if (!client) throw new Error("SUBGRAPH_CLIENT_MISSING");
+      const result = await client.query<SubgraphStakerResponse>({
+        query: gql(SUBGRAPH_QUERIES.stakerById),
+        variables: { id: stakerId },
+      });
+      return result.data;
+    },
     staleTime: 60_000,
+    enabled: !!key && !!stakerId,
   });
 };
 
 export const useSubgraphStakersByAddress = (
-  endpoint?: string,
+  key?: SubgraphEndpointKey,
   address?: string,
 ) => {
-  const { hasEndpoint } = useSubgraphStatus(endpoint);
   return useQuery({
-    queryKey: ["subgraph", "stakers", endpoint, address],
-    queryFn: () =>
-      fetchSubgraph<SubgraphStakersByAddressResponse>(
-        endpoint || "",
-        SUBGRAPH_QUERIES.stakersByAddress,
-        { address },
-      ),
-    enabled: hasEndpoint && Boolean(address) && Boolean(endpoint),
+    queryKey: ["subgraph", "stakers", key, address],
+    queryFn: async () => {
+      const client = getClientByKey(key);
+      if (!client) throw new Error("SUBGRAPH_CLIENT_MISSING");
+      const result = await client.query<SubgraphStakersByAddressResponse>({
+        query: gql(SUBGRAPH_QUERIES.stakersByAddress),
+        variables: { address },
+      });
+      return result.data;
+    },
     staleTime: 60_000,
+    enabled: !!key && !!address,
   });
 };
 
-export const useSubgraphTokens = (endpoint?: string) => {
-  const { hasEndpoint } = useSubgraphStatus(endpoint);
+export const useSubgraphTokens = (key?: SubgraphEndpointKey) => {
   return useQuery({
-    queryKey: ["subgraph", "tokens", endpoint],
-    queryFn: () =>
-      fetchSubgraph<SubgraphTokensResponse>(
-        endpoint || "",
-        SUBGRAPH_QUERIES.tokens,
-      ),
-    enabled: hasEndpoint && Boolean(endpoint),
+    queryKey: ["subgraph", "tokens", key],
+    queryFn: async () => {
+      const client = getClientByKey(key);
+      if (!client) throw new Error("SUBGRAPH_CLIENT_MISSING");
+      const result = await client.query<SubgraphTokensResponse>({
+        query: gql(SUBGRAPH_QUERIES.tokens),
+      });
+      return result.data;
+    },
     staleTime: 60_000,
+    enabled: !!key,
   });
 };

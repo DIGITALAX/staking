@@ -7,6 +7,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { mainnet as lens, PublicClient } from "@lens-protocol/client";
 import { FullScreenVideo } from "./components/Modules/types/modals.types";
 import { chains } from "@lens-chain/sdk/viem";
+import { MonaStats } from "./components/Common/types/common.types";
+
+type StatsCache = {
+  loaded: boolean;
+  ethMona?: MonaStats;
+  polyMona?: MonaStats;
+  podeV1Address?: `0x${string}`;
+};
 
 const queryClient = new QueryClient();
 
@@ -15,6 +23,8 @@ export const ModalContext = createContext<
       lensClient: PublicClient | undefined;
       setFullScreenVideo: (e: SetStateAction<FullScreenVideo>) => void;
       fullScreenVideo: FullScreenVideo;
+      statsCache: StatsCache;
+      setStatsCache: (e: SetStateAction<StatsCache>) => void;
     }
   | undefined
 >(undefined);
@@ -49,6 +59,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     index: 0,
     volume: 0.5,
   });
+  const [statsCache, setStatsCache] = useState<StatsCache>({
+    loaded: false,
+  });
 
   useEffect(() => {
     if (!lensClient) {
@@ -66,7 +79,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <ConnectKitProvider>
           <ModalContext.Provider
-            value={{ lensClient, fullScreenVideo, setFullScreenVideo }}
+            value={{
+              lensClient,
+              fullScreenVideo,
+              setFullScreenVideo,
+              statsCache,
+              setStatsCache,
+            }}
           >
             {children}
           </ModalContext.Provider>

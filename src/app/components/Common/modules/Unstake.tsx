@@ -8,18 +8,13 @@ import {
   useWriteContract,
 } from "wagmi";
 import { formatUnits } from "viem";
-import { MONA_STAKING_ABI, NFT_STAKING_ABI } from "@/app/lib/stakingAbis";
 import Image from "next/image";
 import { INFURA_GATEWAY, POOLS } from "@/app/lib/constants";
-import { getSubgraphEndpoint } from "@/app/lib/subgraph";
-import {
-  useSubgraphPool,
-  useSubgraphStatus,
-  useSubgraphStaker,
-} from "../hooks/useSubgraph";
+import { useSubgraphPool, useSubgraphStaker } from "../hooks/useSubgraph";
 import PoolFrame from "./ui/PoolFrame";
 import PoolActionButton from "./ui/PoolActionButton";
 import { PoolConfig } from "../types/common.types";
+import { ABIS } from "@/app/abis";
 
 const formatAmount = (value?: bigint, decimals = 18) => {
   if (!value) return "0";
@@ -29,8 +24,6 @@ const formatAmount = (value?: bigint, decimals = 18) => {
 };
 
 const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
-  const subgraphEndpoint = getSubgraphEndpoint(pool.subgraphKey);
-  const { hasEndpoint } = useSubgraphStatus(subgraphEndpoint);
   const { address, isConnected, chainId } = useAccount();
   const { switchChain, isPending: isSwitching } = useSwitchChain();
   const { writeContractAsync, isPending: isWriting } = useWriteContract();
@@ -40,15 +33,14 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
   const isReady = Boolean(address) && !isWrongChain;
   const poolId = pool.stakingAddress.toLowerCase();
   const stakerId = address ? `${poolId}:${address.toLowerCase()}` : undefined;
-  const enableSubgraph = hasEndpoint;
 
   const { data: poolData, isLoading: isPoolLoading } = useSubgraphPool(
-    enableSubgraph ? subgraphEndpoint : undefined,
-    enableSubgraph ? poolId : undefined,
+    pool.subgraphKey,
+    poolId,
   );
   const { data: stakerData, isLoading: isStakerLoading } = useSubgraphStaker(
-    enableSubgraph ? subgraphEndpoint : undefined,
-    enableSubgraph ? stakerId : undefined,
+    pool.subgraphKey,
+    stakerId,
   );
 
   const commonRead = {
@@ -58,14 +50,14 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
 
   const { data: tokensClaimable } = useReadContract({
     ...commonRead,
-    abi: pool.kind === "mona" ? MONA_STAKING_ABI : NFT_STAKING_ABI,
+    abi: pool.kind === "mona" ? ABIS.MonaStaking : ABIS.NFTStaking,
     functionName: "tokensClaimable",
     query: { enabled: Boolean(address) },
   });
 
   const { data: stakedBalance } = useReadContract({
     ...commonRead,
-    abi: MONA_STAKING_ABI,
+    abi: ABIS.MonaStaking,
     functionName: "getStakedBalance",
     args: address ? [address] : undefined,
     query: { enabled: Boolean(address) && pool.kind === "mona" },
@@ -73,7 +65,7 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
 
   const { data: stakedLpBalance } = useReadContract({
     ...commonRead,
-    abi: MONA_STAKING_ABI,
+    abi: ABIS.MonaStaking,
     functionName: "getStakedLPBalance",
     args: address ? [address] : undefined,
     query: { enabled: Boolean(address) && pool.kind === "mona" },
@@ -81,7 +73,7 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
 
   const { data: monaUnclaimed } = useReadContract({
     ...commonRead,
-    abi: MONA_STAKING_ABI,
+    abi: ABIS.MonaStaking,
     functionName: "unclaimedRewards",
     args: address ? [address] : undefined,
     query: { enabled: Boolean(address) && pool.kind === "mona" },
@@ -89,7 +81,7 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
 
   const { data: stakedTokens } = useReadContract({
     ...commonRead,
-    abi: NFT_STAKING_ABI,
+    abi: ABIS.NFTStaking,
     functionName: "getStakedTokens",
     args: address ? [address] : undefined,
     query: { enabled: Boolean(address) && pool.kind === "nft" },
@@ -97,7 +89,7 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
 
   const { data: nftUnclaimed } = useReadContract({
     ...commonRead,
-    abi: NFT_STAKING_ABI,
+    abi: ABIS.NFTStaking,
     functionName: "unclaimedRewards",
     args: address ? [address] : undefined,
     query: { enabled: Boolean(address) && pool.kind === "nft" },
@@ -143,7 +135,7 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
         await writeContractAsync({
           address: pool.stakingAddress,
           chainId: pool.chainId,
-          abi: MONA_STAKING_ABI,
+          abi: ABIS.MonaStaking,
           functionName: "claimReward",
         });
         return;
@@ -151,7 +143,7 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
       await writeContractAsync({
         address: pool.stakingAddress,
         chainId: pool.chainId,
-        abi: NFT_STAKING_ABI,
+        abi: ABIS.NFTStaking,
         functionName: "claimReward",
         args: [address],
       });
@@ -167,7 +159,7 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
       await writeContractAsync({
         address: pool.stakingAddress,
         chainId: pool.chainId,
-        abi: MONA_STAKING_ABI,
+        abi: ABIS.MonaStaking,
         functionName: "unstake",
         args: [amount],
       });
@@ -183,7 +175,7 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
       await writeContractAsync({
         address: pool.stakingAddress,
         chainId: pool.chainId,
-        abi: MONA_STAKING_ABI,
+        abi: ABIS.MonaStaking,
         functionName: "unstakeLP",
         args: [amount],
       });
@@ -198,7 +190,7 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
       await writeContractAsync({
         address: pool.stakingAddress,
         chainId: pool.chainId,
-        abi: NFT_STAKING_ABI,
+        abi: ABIS.NFTStaking,
         functionName: "unstake",
         args: [tokenId],
       });
@@ -214,7 +206,7 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
       await writeContractAsync({
         address: pool.stakingAddress,
         chainId: pool.chainId,
-        abi: NFT_STAKING_ABI,
+        abi: ABIS.NFTStaking,
         functionName: "unstakeBatch",
         args: [tokenIds],
       });
@@ -240,30 +232,28 @@ const PoolCard = ({ pool, dict }: { pool: PoolConfig; dict: any }) => {
             {pool.subgraphKey === "eth" ? dict?.unstakeEth : dict?.unstakePoly}
           </div>
         </div>
-        {enableSubgraph && (
-          <div className="flex flex-wrap gap-3 text-xs font-dosis text-black/70">
-            <div>
-              {dict?.poolStakers}{" "}
-              {isPoolLoading ? "..." : (poolData?.pool?.stakersCount ?? "--")}
-            </div>
-            <div>
-              {dict?.poolClaims}{" "}
-              {isPoolLoading
-                ? "..."
-                : poolData?.pool?.totalClaims
-                  ? formatAmount(BigInt(poolData.pool.totalClaims))
-                  : "--"}
-            </div>
-            <div>
-              {dict?.yourClaimed}{" "}
-              {isStakerLoading
-                ? "..."
-                : stakerData?.staker?.rewardsClaimed
-                  ? formatAmount(BigInt(stakerData.staker.rewardsClaimed))
-                  : "--"}
-            </div>
+        <div className="flex flex-wrap gap-3 text-xs font-dosis text-black/70">
+          <div>
+            {dict?.poolStakers}{" "}
+            {isPoolLoading ? "..." : (poolData?.pool?.stakersCount ?? "--")}
           </div>
-        )}
+          <div>
+            {dict?.poolClaims}{" "}
+            {isPoolLoading
+              ? "..."
+              : poolData?.pool?.totalClaims
+                ? formatAmount(BigInt(poolData.pool.totalClaims))
+                : "--"}
+          </div>
+          <div>
+            {dict?.yourClaimed}{" "}
+            {isStakerLoading
+              ? "..."
+              : stakerData?.staker?.rewardsClaimed
+                ? formatAmount(BigInt(stakerData.staker.rewardsClaimed))
+                : "--"}
+          </div>
+        </div>
 
         {!isConnected && (
           <div className="font-dosis text-sm text-black/70">

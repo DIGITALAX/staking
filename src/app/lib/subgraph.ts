@@ -1,18 +1,6 @@
 export type SubgraphEndpointKey = "eth" | "poly";
 
-const getApiBaseUrl = () => {
-  if (typeof window === "undefined") {
-    return process.env.NEXT_PUBLIC_BASE_URL || "";
-  }
-  return "";
-};
 
-export const getSubgraphEndpoint = (key?: SubgraphEndpointKey) => {
-  if (!key) return "";
-  const path = key === "eth" ? "/api/graphql/unstake-eth" : "/api/graphql/unstake-poly";
-  const baseUrl = getApiBaseUrl();
-  return baseUrl ? `${baseUrl}${path}` : path;
-};
 
 export type SubgraphPool = {
   id: string;
