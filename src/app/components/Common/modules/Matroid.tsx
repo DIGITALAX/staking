@@ -3,7 +3,7 @@
 import Box from "./Box";
 import PoolFrame from "./ui/PoolFrame";
 
-const Quiltoide = ({ dict }: { dict: any }) => {
+const Matroid = ({ dict }: { dict: any }) => {
   return (
     <div className="relative w-full h-full col-start-1 grid grid-flow-row pt-10">
       <div
@@ -105,4 +105,4 @@ const Quiltoide = ({ dict }: { dict: any }) => {
   );
 };
 
-export default Quiltoide;
+export default Matroid;

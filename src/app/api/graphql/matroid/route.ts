@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ApolloClient, InMemoryCache, HttpLink, gql } from "@apollo/client";
 
-const serverQuiltoideClient = new ApolloClient({
+const serverMatroidClient = new ApolloClient({
   link: new HttpLink({
-    uri: process.env.GRAPH_NODE_URL_QUILTOIDE,
+    uri: process.env.GRAPH_NODE_URL_MATROID,
   }),
   cache: new InMemoryCache(),
 });
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Query is required" }, { status: 400 });
     }
 
-    const result = await serverQuiltoideClient.query({
+    const result = await serverMatroidClient.query({
       query: gql(query),
       variables: variables || {},
       fetchPolicy: "no-cache",

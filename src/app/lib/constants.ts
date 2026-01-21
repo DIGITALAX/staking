@@ -18,7 +18,7 @@ export const MONA: { eth: string; poly: string; lens: string } = {
 export const PANEL_KEY: { [key: number]: string } = {
   0: "runtime",
   1: "deLoom",
-  2: "Quiltoide",
+  2: "Matroid",
   3: "poolSearch",
   4: "recuts",
 };

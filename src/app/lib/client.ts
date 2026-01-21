@@ -1,19 +1,19 @@
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 
-const getQuiltoideUri = () => {
+const getMatroidUri = () => {
   if (typeof window === "undefined") {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    return `${baseUrl}/api/graphql/quiltoide`;
+    return `${baseUrl}/api/graphql/matroid`;
   }
-  return "/api/graphql/quiltoide";
+  return "/api/graphql/matroid";
 };
 
-const httpLinkQuiltoide = new HttpLink({
-  uri: getQuiltoideUri(),
+const httpLinkMatroid = new HttpLink({
+  uri: getMatroidUri(),
 });
 
 export const graphClient = new ApolloClient({
-  link: httpLinkQuiltoide,
+  link: httpLinkMatroid,
   cache: new InMemoryCache(),
 });
 

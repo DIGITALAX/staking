@@ -7,7 +7,7 @@ import Unstake from "./Unstake";
 import Stats from "./Stats";
 import PoolSearch from "./PoolSearch";
 import Recuts from "./Recuts";
-import Quiltoide from "./Quiltoide";
+import Matroid from "./Matroid";
 
 const Entry: FunctionComponent<{ dict: any }> = ({ dict }): JSX.Element => {
   const [panelIndex, setPanelIndex] = useState<number>(0);
@@ -27,7 +27,7 @@ const Entry: FunctionComponent<{ dict: any }> = ({ dict }): JSX.Element => {
           ) : panelIndex === 1 ? (
             <Unstake dict={dict} />
           ) : panelIndex === 2 ? (
-            <Quiltoide dict={dict} />
+            <Matroid dict={dict} />
           ) : panelIndex === 3 ? (
             <PoolSearch dict={dict} />
           ) : (
