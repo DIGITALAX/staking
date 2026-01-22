@@ -188,16 +188,10 @@ const Stats = ({ dict }: { dict: any }) => {
                     {dict?.claims}: {formatAmount(ethPoolsQuery.totals.claims)}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    {dict?.staked}:{" "}
-                    {ethStakedTotals.amount > 0n
-                      ? formatAmount(ethStakedTotals.amount)
-                      : "--"}
+                    {dict?.staked}: {formatAmount(ethStakedTotals.amount)}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    {dict?.staked} (NFTs):{" "}
-                    {ethStakedTotals.count > 0
-                      ? ethStakedTotals.count
-                      : "--"}
+                    {dict?.stakedNfts}: {ethStakedTotals.count}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
                     {dict?.poolsTitle}: {ethPoolsQuery.data?.pools?.length ?? "--"}
@@ -260,16 +254,10 @@ const Stats = ({ dict }: { dict: any }) => {
                     {dict?.claims}: {formatAmount(polyPoolsQuery.totals.claims)}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    {dict?.staked}:{" "}
-                    {polyStakedTotals.amount > 0n
-                      ? formatAmount(polyStakedTotals.amount)
-                      : "--"}
+                    {dict?.staked}: {formatAmount(polyStakedTotals.amount)}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    {dict?.staked} (NFTs):{" "}
-                    {polyStakedTotals.count > 0
-                      ? polyStakedTotals.count
-                      : "--"}
+                    {dict?.stakedNfts}: {polyStakedTotals.count}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
                     {dict?.poolsTitle}: {polyPoolsQuery.data?.pools?.length ?? "--"}
