@@ -32,6 +32,27 @@ const Stats = ({ dict }: { dict: any }) => {
   const isAmountPool = (kind?: string | null) =>
     kind === "mona" || kind === "w3f";
 
+  const getStakedTotals = (pools?: typeof ethPoolsQuery.data.pools) => {
+    if (!pools?.length) {
+      return { amount: 0n, count: 0 };
+    }
+    return pools.reduce(
+      (acc, pool) => {
+        if (!pool.totalStaked) return acc;
+        if (isAmountPool(pool.kind)) {
+          acc.amount += BigInt(pool.totalStaked);
+        } else {
+          acc.count += Number(pool.totalStaked);
+        }
+        return acc;
+      },
+      { amount: 0n, count: 0 },
+    );
+  };
+
+  const ethStakedTotals = getStakedTotals(ethPoolsQuery.data?.pools);
+  const polyStakedTotals = getStakedTotals(polyPoolsQuery.data?.pools);
+
   return (
     <div className="relative w-full h-full col-start-1 grid grid-flow-row pt-10">
       <div
@@ -167,7 +188,16 @@ const Stats = ({ dict }: { dict: any }) => {
                     {dict?.claims}: {formatAmount(ethPoolsQuery.totals.claims)}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    {dict?.staked}: {formatAmount(ethPoolsQuery.totals.staked)}
+                    {dict?.staked}:{" "}
+                    {ethStakedTotals.amount > 0n
+                      ? formatAmount(ethStakedTotals.amount)
+                      : "--"}
+                  </div>
+                  <div className="font-dosis text-xs text-black/60">
+                    {dict?.staked} (NFTs):{" "}
+                    {ethStakedTotals.count > 0
+                      ? ethStakedTotals.count
+                      : "--"}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
                     {dict?.poolsTitle}: {ethPoolsQuery.data?.pools?.length ?? "--"}
@@ -230,7 +260,16 @@ const Stats = ({ dict }: { dict: any }) => {
                     {dict?.claims}: {formatAmount(polyPoolsQuery.totals.claims)}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    {dict?.staked}: {formatAmount(polyPoolsQuery.totals.staked)}
+                    {dict?.staked}:{" "}
+                    {polyStakedTotals.amount > 0n
+                      ? formatAmount(polyStakedTotals.amount)
+                      : "--"}
+                  </div>
+                  <div className="font-dosis text-xs text-black/60">
+                    {dict?.staked} (NFTs):{" "}
+                    {polyStakedTotals.count > 0
+                      ? polyStakedTotals.count
+                      : "--"}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
                     {dict?.poolsTitle}: {polyPoolsQuery.data?.pools?.length ?? "--"}
