@@ -29,6 +29,9 @@ const Stats = ({ dict }: { dict: any }) => {
     ethPoolsQuery,
   } = useStats();
 
+  const isAmountPool = (kind?: string | null) =>
+    kind === "mona" || kind === "w3f";
+
   return (
     <div className="relative w-full h-full col-start-1 grid grid-flow-row pt-10">
       <div
@@ -343,7 +346,9 @@ const Stats = ({ dict }: { dict: any }) => {
                       <div className="font-dosis text-xs text-black/60">
                         {dict?.totalStaked}:{" "}
                         {pool.totalStaked
-                          ? formatAmount(BigInt(pool.totalStaked))
+                          ? isAmountPool(pool.kind)
+                            ? formatAmount(BigInt(pool.totalStaked))
+                            : pool.totalStaked
                           : "--"}
                       </div>
                     </div>
