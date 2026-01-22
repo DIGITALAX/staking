@@ -8,6 +8,7 @@ import {
   formatAmountWithDecimals,
   shortAddress,
 } from "@/app/lib/helpers";
+import type { SubgraphPool } from "@/app/lib/subgraph";
 
 const Stats = ({ dict }: { dict: any }) => {
   const {
@@ -32,7 +33,7 @@ const Stats = ({ dict }: { dict: any }) => {
   const isAmountPool = (kind?: string | null) =>
     kind === "mona" || kind === "w3f";
 
-  const getStakedTotals = (pools?: typeof ethPoolsQuery.data.pools) => {
+  const getStakedTotals = (pools?: SubgraphPool[]) => {
     if (!pools?.length) {
       return { amount: 0n, count: 0 };
     }
