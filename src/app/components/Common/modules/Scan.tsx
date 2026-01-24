@@ -29,7 +29,9 @@ const Scan: FunctionComponent<ScanProps> = ({
   const path = usePathname();
   const router = useRouter();
   const [chosenLanguage, setChosenLanguage] = useState<number>(
-    idiomaAIndice[(path.match(/(?<=\/)(en|es|ar|pt)(?=\/)/)?.[0] ?? "en") as Idiomas],
+    idiomaAIndice[
+      (path.match(/(?<=\/)(en|es|ar|pt)(?=\/)/)?.[0] ?? "en") as Idiomas
+    ],
   );
   const changeLanguage = (lang: string) => {
     const segments = path.split("/");
@@ -83,9 +85,7 @@ const Scan: FunctionComponent<ScanProps> = ({
                   className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-pointer"
                   onClick={() => {
                     const newIdioma =
-                      chosenLanguage > 0
-                        ? chosenLanguage - 1
-                        : 3;
+                      chosenLanguage > 0 ? chosenLanguage - 1 : 3;
                     changeLanguage(indiceAIdioma[newIdioma]);
                     setChosenLanguage(newIdioma);
                   }}
@@ -99,9 +99,7 @@ const Scan: FunctionComponent<ScanProps> = ({
                   className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-pointer"
                   onClick={() => {
                     const newIdioma =
-                      chosenLanguage < 3
-                        ? chosenLanguage + 1
-                        : 0;
+                      chosenLanguage < 3 ? chosenLanguage + 1 : 0;
                     changeLanguage(indiceAIdioma[newIdioma]);
                     setChosenLanguage(newIdioma);
                   }}
@@ -145,7 +143,11 @@ const Scan: FunctionComponent<ScanProps> = ({
         </div>
 
         <div className="flex absolute w-full h-fit left-0 bottom-0 pt-20">
-          <MarqueeText gradient={false} speed={100} direction={"left"}>
+          <MarqueeText
+            gradient={false}
+            speed={100}
+            direction={path?.includes("ar") ? "right" : "left"}
+          >
             <div className="flex relative w-full h-fit text-white font-digi uppercase leading-[16rem] text-[16rem] px-2 pb-2">
               {dict?.marquee}
             </div>
