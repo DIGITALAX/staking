@@ -39,16 +39,52 @@ export type SubgraphStakersByAddressResponse = {
 export type SubgraphToken = {
   id: string;
   name: string;
+  symbol?: string | null;
+  decimals?: number | null;
   chainId: number;
   standard: string;
   contractAddress: string;
   totalSupply: string;
   transferCount: string;
   holderCount: number;
+  availableToMint?: string | null;
+  freezeCap?: boolean | null;
+  cap?: string | null;
 };
 
 export type SubgraphTokensResponse = {
   tokens: SubgraphToken[];
+};
+
+export type SubgraphTokenResponse = {
+  token: SubgraphToken | null;
+};
+
+export type SubgraphTokenHolder = {
+  id: string;
+  token: { id: string };
+  address: string;
+  balance: string;
+};
+
+export type SubgraphTokenHoldersResponse = {
+  tokenHolders: SubgraphTokenHolder[];
+};
+
+export type SubgraphTokenTransfer = {
+  id: string;
+  token: { id: string };
+  from: string;
+  to: string;
+  amount: string;
+  tokenId?: string | null;
+  timestamp: string;
+  txHash: string;
+  blockNumber: string;
+};
+
+export type SubgraphTokenTransfersResponse = {
+  tokenTransfers: SubgraphTokenTransfer[];
 };
 
 export const SUBGRAPH_QUERIES = {
@@ -105,12 +141,66 @@ export const SUBGRAPH_QUERIES = {
       tokens {
         id
         name
+        symbol
+        decimals
         chainId
         standard
         contractAddress
         totalSupply
         transferCount
         holderCount
+        availableToMint
+        freezeCap
+        cap
+      }
+    }
+  `,
+  tokenById: `
+    query Token($id: ID!) {
+      token(id: $id) {
+        id
+        name
+        symbol
+        decimals
+        chainId
+        standard
+        contractAddress
+        totalSupply
+        transferCount
+        holderCount
+        availableToMint
+        freezeCap
+        cap
+      }
+    }
+  `,
+  tokenTransfers: `
+    query TokenTransfers($token: String!, $first: Int = 10) {
+      tokenTransfers(
+        first: $first
+        orderBy: timestamp
+        orderDirection: desc
+        where: { token: $token }
+      ) {
+        id
+        token { id }
+        from
+        to
+        amount
+        tokenId
+        timestamp
+        txHash
+        blockNumber
+      }
+    }
+  `,
+  tokenHoldersByAddress: `
+    query TokenHoldersByAddress($token: String!, $address: Bytes!) {
+      tokenHolders(where: { token: $token, address: $address }) {
+        id
+        token { id }
+        address
+        balance
       }
     }
   `,

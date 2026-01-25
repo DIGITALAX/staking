@@ -592,6 +592,7 @@ export const TOKEN_ADDRESSES = {
   eth: {
     mona: MONA.eth,
     genesisV1: "0x89505d2a27b7e8ac56252081d721ecd525e4241e",
+    podeV1: "0xfa2c6c8599026583dbc274484e5a088880c8de8e",
     podePortal: "0x87c3C6B9C917B1732f13d36d6938E4f8802f7c7E",
   },
   poly: {

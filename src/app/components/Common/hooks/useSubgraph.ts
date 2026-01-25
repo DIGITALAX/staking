@@ -7,6 +7,9 @@ import {
   SubgraphStakerResponse,
   SubgraphStakersByAddressResponse,
   SubgraphTokensResponse,
+  SubgraphTokenResponse,
+  SubgraphTokenTransfersResponse,
+  SubgraphTokenHoldersResponse,
   SubgraphEndpointKey,
 } from "@/app/lib/subgraph";
 import {
@@ -137,5 +140,67 @@ export const useSubgraphTokens = (key?: SubgraphEndpointKey) => {
     },
     staleTime: 60_000,
     enabled: !!key,
+  });
+};
+
+export const useSubgraphToken = (
+  key?: SubgraphEndpointKey,
+  id?: string,
+) => {
+  return useQuery({
+    queryKey: ["subgraph", "token", key, id],
+    queryFn: async () => {
+      const client = getClientByKey(key);
+      if (!client) throw new Error("SUBGRAPH_CLIENT_MISSING");
+      const result = await client.query<SubgraphTokenResponse>({
+        query: gql(SUBGRAPH_QUERIES.tokenById),
+        variables: { id },
+      });
+      return result.data;
+    },
+    staleTime: 60_000,
+    enabled: !!key && !!id,
+  });
+};
+
+export const useSubgraphTokenTransfers = (
+  key?: SubgraphEndpointKey,
+  token?: string,
+  first = 10,
+) => {
+  return useQuery({
+    queryKey: ["subgraph", "tokenTransfers", key, token, first],
+    queryFn: async () => {
+      const client = getClientByKey(key);
+      if (!client) throw new Error("SUBGRAPH_CLIENT_MISSING");
+      const result = await client.query<SubgraphTokenTransfersResponse>({
+        query: gql(SUBGRAPH_QUERIES.tokenTransfers),
+        variables: { token, first },
+      });
+      return result.data;
+    },
+    staleTime: 60_000,
+    enabled: !!key && !!token,
+  });
+};
+
+export const useSubgraphTokenHoldersByAddress = (
+  key?: SubgraphEndpointKey,
+  token?: string,
+  address?: string,
+) => {
+  return useQuery({
+    queryKey: ["subgraph", "tokenHolders", key, token, address],
+    queryFn: async () => {
+      const client = getClientByKey(key);
+      if (!client) throw new Error("SUBGRAPH_CLIENT_MISSING");
+      const result = await client.query<SubgraphTokenHoldersResponse>({
+        query: gql(SUBGRAPH_QUERIES.tokenHoldersByAddress),
+        variables: { token, address },
+      });
+      return result.data;
+    },
+    staleTime: 60_000,
+    enabled: !!key && !!token && !!address,
   });
 };
