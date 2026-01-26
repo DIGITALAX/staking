@@ -16,7 +16,7 @@ const Box: FunctionComponent<BoxProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`relative row-start-${row} col-start-${col} justify-self-${justify} self-${self} sm:flex hidden h-6 w-6 md:h-12 md:w-12 ${
+      className={`relative row-start-${row} col-start-${col} justify-self-${justify} self-${self} sm:flex hidden h-6 w-6 ${
         bgColor && "bg-white"
       } ${rounded ? "rounded-full" : "rounded-md "} ${border && "border-black border-2"}`}
     >

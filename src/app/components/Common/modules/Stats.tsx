@@ -281,7 +281,7 @@ const Stats = ({ dict }: { dict: any }) => {
                     {walletTotals ? walletTotals.staked.toString() : "--"}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    MONA (ETH)
+                    {dict?.monaEth}
                   </div>
                   <div className="font-digiB text-lg">
                     {formatAmountWithDecimals(
@@ -290,7 +290,7 @@ const Stats = ({ dict }: { dict: any }) => {
                     )}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    MONA (POLY)
+                    {dict?.monaPoly}
                   </div>
                   <div className="font-digiB text-lg">
                     {formatAmountWithDecimals(
@@ -299,43 +299,43 @@ const Stats = ({ dict }: { dict: any }) => {
                     )}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    MONA (LENS)
+                    {dict?.monaLens}
                   </div>
                   <div className="font-digiB text-lg">
                     {formatAmountWithDecimals(walletMonaLens, 18)}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    Genesis v1 (ETH)
+                    {dict?.genesisV1Eth}
                   </div>
                   <div className="font-digiB text-lg">
                     {walletGenesisV1?.toString() ?? "--"}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    Genesis v2 (POLY)
+                    {dict?.genesisV2Poly}
                   </div>
                   <div className="font-digiB text-lg">
                     {walletGenesisV2?.toString() ?? "--"}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    PODE v1 (ETH)
+                    {dict?.podeV1Eth}
                   </div>
                   <div className="font-digiB text-lg">
                     {walletPodeV1?.toString() ?? "--"}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    PODE v2 (POLY)
+                    {dict?.podeV2Poly}
                   </div>
                   <div className="font-digiB text-lg">
                     {walletPodeV2?.toString() ?? "--"}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    DECO (POLY)
+                    {dict?.decoPoly}
                   </div>
                   <div className="font-digiB text-lg">
                     {formatAmountWithDecimals(walletDeco, decoDecimals)}
                   </div>
                   <div className="font-dosis text-xs text-black/60">
-                    DLTA (POLY)
+                    {dict?.dltaPoly}
                   </div>
                   <div className="font-digiB text-lg">
                     {formatAmountWithDecimals(walletDlta, dltaDecimals)}

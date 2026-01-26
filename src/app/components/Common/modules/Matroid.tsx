@@ -1,9 +1,77 @@
 "use client";
 
+import { useMemo, useState } from "react";
+import { useAccount, useSwitchChain } from "wagmi";
+import { formatUnits, parseUnits } from "viem";
 import Box from "./Box";
 import PoolFrame from "./ui/PoolFrame";
+import PoolActionButton from "./ui/PoolActionButton";
+import { MATROID_CHAIN_ID } from "@/app/lib/constants";
+import { useMatroidGlobal } from "../hooks/useMatroidSubgraph";
+import { useMatroidGlobalStaking } from "../hooks/useMatroidStaking";
+
+const formatAmount = (value?: bigint, decimals = 18) => {
+  if (!value) return "0";
+  const [whole, fraction = ""] = formatUnits(value, decimals).split(".");
+  const trimmed = fraction.slice(0, 4);
+  return trimmed ? `${whole}.${trimmed}` : whole;
+};
 
 const Matroid = ({ dict }: { dict: any }) => {
+  const { isConnected, chainId } = useAccount();
+  const { switchChain, isPending: isSwitching } = useSwitchChain();
+  const [amount, setAmount] = useState("");
+
+  const { data: globalData } = useMatroidGlobal();
+  const {
+    totalStaked,
+    staked,
+    earnedRewards,
+    allowance,
+    balance,
+    approve,
+    stake,
+    unstake,
+    claim,
+    isWriting,
+  } = useMatroidGlobalStaking();
+
+  const isWrongChain = isConnected && chainId !== MATROID_CHAIN_ID;
+  const canSubmit = Boolean(amount) && Number(amount) > 0;
+  const needsApproval = useMemo(() => {
+    if (!allowance || !amount) return true;
+    try {
+      const required = parseUnits(amount, 18);
+      return allowance < required;
+    } catch {
+      return true;
+    }
+  }, [allowance, amount]);
+
+  const handleSwitch = async () => {
+    if (!switchChain) return;
+    await switchChain({ chainId: MATROID_CHAIN_ID });
+  };
+
+  const handleApprove = async () => {
+    if (!canSubmit) return;
+    await approve(amount);
+  };
+
+  const handleStake = async () => {
+    if (!canSubmit) return;
+    await stake(amount);
+  };
+
+  const handleUnstake = async () => {
+    if (!canSubmit) return;
+    await unstake(amount);
+  };
+
+  const handleClaim = async () => {
+    await claim();
+  };
+
   return (
     <div className="relative w-full h-full col-start-1 grid grid-flow-row pt-10">
       <div
@@ -65,7 +133,92 @@ const Matroid = ({ dict }: { dict: any }) => {
             />
           </div>
           <PoolFrame title={`*${dict?.lensStaking}*`}>
-            <div className="relative w-full min-h-[40rem] flex text-center items-center justify-center p-2 font-earl">{dict?.comingSoon}</div>
+            <div className="relative w-full h-fit flex flex-col gap-4 font-earl text-sm text-black">
+              <div className="relative w-full h-fit flex flex-col gap-2">
+                <div className="relative w-full h-fit flex flex-row justify-between">
+                  <span>{dict?.totalStaked}</span>
+                  <span>{formatAmount(totalStaked)} MONA</span>
+                </div>
+                <div className="relative w-full h-fit flex flex-row justify-between">
+                  <span>{dict?.yourStake}</span>
+                  <span>{formatAmount(staked)} MONA</span>
+                </div>
+                <div className="relative w-full h-fit flex flex-row justify-between">
+                  <span>{dict?.yourRewards}</span>
+                  <span>{formatAmount(earnedRewards ?? undefined)} MONA</span>
+                </div>
+                <div className="relative w-full h-fit flex flex-row justify-between">
+                  <span>{dict?.walletBalance}</span>
+                  <span>{formatAmount(balance)} MONA</span>
+                </div>
+              </div>
+              <div className="relative w-full h-fit flex flex-col gap-3">
+                <input
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder={dict?.amount}
+                  className="relative w-full h-10 rounded-md border border-black px-3 text-black bg-white"
+                />
+                {isWrongChain ? (
+                  <PoolActionButton
+                    label={
+                      isSwitching
+                        ? dict?.switching
+                        : dict?.switchToLens
+                    }
+                    onClick={handleSwitch}
+                    disabled={!switchChain || isSwitching}
+                  />
+                ) : (
+                  <div className="relative w-full h-fit flex flex-row flex-wrap gap-2">
+                    <PoolActionButton
+                      label={dict?.approve}
+                      onClick={handleApprove}
+                      disabled={!isConnected || !needsApproval || !canSubmit || isWriting}
+                    />
+                    <PoolActionButton
+                      label={dict?.stake}
+                      onClick={handleStake}
+                      disabled={!isConnected || needsApproval || !canSubmit || isWriting}
+                    />
+                    <PoolActionButton
+                      label={dict?.unstake}
+                      onClick={handleUnstake}
+                      disabled={!isConnected || !canSubmit || isWriting}
+                    />
+                    <PoolActionButton
+                      label={dict?.claim}
+                      onClick={handleClaim}
+                      disabled={!isConnected || isWriting || !earnedRewards || earnedRewards === 0n}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="relative w-full h-fit text-xs text-black/80">
+                <span>
+                  {dict?.matroidGlobalPrefix}
+                </span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    window.open(
+                      "https://matroid.digitalax.xyz/",
+                      "_blank",
+                      "noopener,noreferrer",
+                    )
+                  }
+                  className="relative w-fit h-fit underline underline-offset-2 cursor-pointer text-black hover:text-offBlue text-left"
+                >
+                  {dict?.linkedHere}
+                </button>
+                <span>.</span>
+              </div>
+              <div className="relative w-full h-fit text-xs text-black/70">
+                {globalData?.globalPool
+                  ? `${dict?.poolAddress}: ${globalData.globalPool}`
+                  : ""}
+              </div>
+            </div>
           </PoolFrame>
         </div>
         <div

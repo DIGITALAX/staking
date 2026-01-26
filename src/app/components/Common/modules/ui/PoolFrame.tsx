@@ -10,7 +10,7 @@ type PoolFrameProps = {
 
 const FrameIcon = ({ image }: { image?: string }) => {
   return (
-    <div className="relative col-start-1 border-4 w-10 h-10 md:w-12 md:h-12 border-black bg-yell grid grid-flow-row auto-rows-auto p-px self-center justify-self-start">
+    <div className="relative col-start-1 border-4 w-6 h-6 border-black bg-yell grid grid-flow-row auto-rows-auto p-px self-center justify-self-start">
       {image && (
         <Image
           src={`${INFURA_GATEWAY}/ipfs/${image}`}

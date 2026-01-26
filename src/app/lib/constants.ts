@@ -6,6 +6,12 @@ export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
 export const INFURA_GATEWAY_INTERNAL: string =
   "https://digitalax.xyz/api/infura/";
 
+export const MATROID_CHAIN_ID = 232;
+export const MATROID_ADDRESSES = {
+  mona: "0x28547B5b6B405A1444A17694AC84aa2d6A03b3Bd",
+  globalStakingPool: "0x0000000000000000000000000000000000000000",
+} as const;
+
 export const CHROMADIN: `0x${string}` =
   "0x16a362A10C1f6Bc0565C8fFAd298f1c2761630C5";
 

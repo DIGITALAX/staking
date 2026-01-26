@@ -244,6 +244,7 @@ const useStats = () => {
     { claimed: 0n, staked: 0n },
   );
 
+
   return {
     walletDeco,
     walletDlta,
