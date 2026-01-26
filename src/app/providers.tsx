@@ -1,7 +1,8 @@
 "use client";
 import { createContext, SetStateAction, useEffect, useState } from "react";
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import { injected } from "wagmi/connectors";
+import { ConnectKitProvider } from "connectkit";
 import { mainnet, polygon } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { mainnet as lens, PublicClient } from "@lens-protocol/client";
@@ -29,26 +30,22 @@ export const ModalContext = createContext<
   | undefined
 >(undefined);
 
-export const config = createConfig(
-  getDefaultConfig({
-    appName: "Material Staking",
-    walletConnectProjectId: process.env
-      .NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string,
-    appUrl: "https://staking.digitalax.xyz",
-    appIcon: "https://staking.digitalax.xyz/favicon.ico",
-    chains: [mainnet, polygon, chains.mainnet],
-    transports: {
-      [mainnet.id]: http(
-        `https://rpc.lens.xyz/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
-      ),
-      [polygon.id]: http(
-        `https://rpc.lens.xyz/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
-      ),
-      [chains.mainnet.id]: http("https://rpc.lens.xyz"),
-    },
-    ssr: true,
-  }),
-);
+const connectors = [injected({ target: "metaMask" })];
+
+export const config = createConfig({
+  chains: [mainnet, polygon, chains.mainnet],
+  transports: {
+    [mainnet.id]: http(
+      `https://rpc.lens.xyz/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
+    ),
+    [polygon.id]: http(
+      `https://rpc.lens.xyz/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
+    ),
+    [chains.mainnet.id]: http("https://rpc.lens.xyz"),
+  },
+  connectors,
+  ssr: true,
+});
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [lensClient, setLensClient] = useState<PublicClient | undefined>();
